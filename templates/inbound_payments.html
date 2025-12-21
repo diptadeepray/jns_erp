@@ -1,0 +1,312 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Inbound Payments</title>
+
+    <style>
+        body {
+            /*font-family: Arial, sans-serif;  /* Like first code */
+            background: #f4f6f9;
+            margin: 0;
+            padding: 0;
+            display: flex;                   /* Center the form vertically & horizontally */
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+        }
+
+        h2 {
+            text-align: center;
+            margin-top: 20px;
+            margin-bottom: 20px;
+            font-size: 24px;                 /* Like first code */
+            color: #333;
+        }
+
+        form {
+            width: 70%;                       /* Like first code */
+            background: #fff;
+            padding: 30px;
+            border-radius: 12px;
+            box-shadow: 0 0 15px rgba(0,0,0,0.1);
+        }
+
+        .form-grid {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 20px;                        /* Like first code spacing */
+        }
+
+        label {
+            font-weight: bold;
+            margin-bottom: 6px;
+            display: block;
+        }
+
+        input, select {
+            width: 100%;
+            padding: 8px;
+            font-size: 14px;
+            border: 1px solid #bbb;
+            border-radius: 6px;
+        }
+
+  button {
+    margin: 10px auto 0 auto;  /* top 10px, left/right auto to center, bottom 0 */
+    padding: 8px 15px;
+    width: 45%;
+    display: block;            /* makes margin auto work */
+}
+
+     
+
+        /* Small spacing below the form */
+        body > form {
+            margin-bottom: 40px;
+        }
+    </style>
+
+    <script>
+        // Updates Category dropdown based on Source
+        function updateCategoryDropdown() {
+            const source = document.getElementById("source").value;
+            const categoryDropdown = document.getElementById("category");
+
+            // Clear old options
+            categoryDropdown.innerHTML = '<option value="">-- Select Category --</option>';
+
+            let optionsData = [];
+
+            if (source === "Client") {
+                categoryDropdown.disabled = false;
+                optionsData = JSON.parse('{{ client_categories | tojson }}');
+            } else if (source === "Supplier") {
+                categoryDropdown.disabled = false;
+                optionsData = JSON.parse('{{ supplier_categories | tojson }}');
+            } else {
+                categoryDropdown.disabled = true;
+            }
+
+            optionsData.forEach(cat => {
+                let opt = document.createElement("option");
+                opt.value = cat;
+                opt.text = cat;
+                categoryDropdown.appendChild(opt);
+            });
+
+            toggleClientFields();   // Important to enable/disable other fields
+        }
+
+        // Enables/disables Client/Supplier fields based on Source
+        function toggleClientFields() {
+            const source = document.getElementById("source").value;
+
+            const clientName = document.getElementById("client_name");
+            const siteName = document.getElementById("site_name");
+            const ventureId = document.getElementById("venture_id");
+
+            const supplierName = document.getElementById("supplier_name");
+            const supplierId = document.getElementById("supplier_id");
+
+            if (source === "Client") {
+                clientName.disabled = false;
+                siteName.disabled = false;
+                ventureId.disabled = false;
+
+                supplierName.disabled = true;
+                supplierId.disabled = true;
+
+            } else if (source === "Supplier") {
+                clientName.disabled = true;
+                siteName.disabled = true;
+                ventureId.disabled = true;
+
+                supplierName.disabled = false;
+                supplierId.disabled = false;
+            } else {
+                clientName.disabled = true;
+                siteName.disabled = true;
+                ventureId.disabled = true;
+
+                supplierName.disabled = true;
+                supplierId.disabled = true;
+            }
+        }
+    </script>
+    <style>
+        /* Home button style */
+.home-button {
+     position: absolute;   /* <-- this is the key */
+            margin-top: 10px;
+            padding: 8px 15px;
+            width: auto;
+            top: 40px;
+            left: 40px;
+        
+        }
+ 
+    </style>
+</head>
+
+
+
+
+
+
+
+
+
+
+
+<p style="color: red;">{{ message }}</p>   --client_data
+
+
+
+
+
+
+
+
+
+
+<body>
+ <button class="home-button" type="button" onclick="window.location.href='/'">Home</button>
+
+<form action="/inbound_payments" method="POST">
+
+    <h2>Enter Inbound Payment Details</h2>
+
+    <div class="form-grid">
+
+        <div>
+            <label>Source:</label>
+            <select name="source" id="source" onchange="updateCategoryDropdown()">
+                <option value="">-- Select Source --</option>
+                
+                <option value="Client">Client</option>
+                
+                <option value="Supplier">Supplier</option>
+            
+            </select>
+        </div>
+
+        <div>
+            <label>Category:</label>
+            <select name="category" id="category" disabled>
+                <option value="">-- Select Category --</option>
+            </select>
+        </div>
+
+        <div>
+            <label>Client Name:</label>
+            <select name="client_name" id="client_name" disabled>
+                <option value="">-- Select Client --</option>
+                {% for c in client_data %}
+                    <option value="{{ c['client_name'] }}">{{ c['client_name'] }}</option>
+                {% endfor %}
+            </select>
+        </div>
+
+        <div>
+            <label>Site Name:</label>
+            <select name="site_name" id="site_name" disabled>
+                <option value="">-- Select Site --</option>
+                {% for c in client_data %}
+                    <option value="{{ c['site_name'] }}">{{ c['site_name'] }}</option>
+                {% endfor %}
+            </select>
+        </div>
+
+        <div>
+            <label>Venture ID:</label>
+            <select name="venture_id" id="venture_id" disabled>
+                <option value="">-- Select Venture ID --</option>
+                {% for c in client_data %}
+                    <option value="{{ c['venture_id'] }}">{{ c['venture_id'] }}</option>
+                {% endfor %}
+            </select>
+        </div>
+
+        <div>
+            <label>Supplier Name:</label>
+            <select name="supplier_name" id="supplier_name" disabled>
+                <option value="">-- Select Supplier --</option>
+                {% for s in supplier_data %}
+                    <option value="{{ s['supplier_name'] }}">{{ s['supplier_name'] }}</option>
+                {% endfor %}
+            </select>
+        </div>
+
+        <div>
+            <label>Supplier ID:</label>
+            <select name="supplier_id" id="supplier_id" disabled>
+                <option value="">-- Select Supplier ID --</option>
+                {% for s in supplier_data %}
+                    <option value="{{ s['supplier_id'] }}">{{ s['supplier_id'] }}</option>
+                {% endfor %}
+            </select>
+        </div>
+
+        <div>
+            <label>Cash Amount:</label>
+            <input type="number" step="0.01" name="cash_amount">
+        </div>
+
+        <div>
+            <label>Cheque Amount:</label>
+            <input type="number" step="0.01" name="cheque_amount">
+        </div>
+
+        <div>
+            <label>Total Amount:</label>
+            <input type="number" step="0.01" name="total_amount">
+        </div>
+
+        <div>
+            <label>Amount Number:</label>
+            <input type="text" name="amount_number">
+        </div>
+
+        <div>
+            <label>Cash Name:</label>
+            <input type="text" name="cash_name">
+        </div>
+
+        <div>
+            <label>Cheque Name:</label>
+            <input type="text" name="cheque_name">
+        </div>
+
+        <div>
+            <label>Cheque Date:</label>
+            <input type="date" name="cheque_date">
+        </div>
+
+        <div>
+            <label>Cheque Bank:</label>
+            <input type="text" name="cheque_bank">
+        </div>
+
+        <div>
+            <label>Cheque Number:</label>
+            <input type="text" name="cheque_number">
+        </div>
+
+        <div>
+            <label>Entry Date:</label>
+            <input type="date" name="entry_date">
+        </div>
+
+        <div>
+            <label>AR ID:</label>
+            <input type="text" name="ar_id">
+        </div>
+
+    </div> <!-- End grid -->
+
+    <button type="submit">Submit</button>
+
+</form>
+
+</body>
+</html>

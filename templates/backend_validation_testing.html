@@ -1,0 +1,37 @@
+<!DOCTYPE html>
+<html>
+<body>
+
+<h2>Flask Form Validation</h2>
+
+
+
+
+
+<p style="color: red;">{{ message }}</p>   --important
+
+
+
+
+
+<form method="POST">
+
+
+
+
+
+    Name:<br>
+    <input type="text" name="name" value="{{ data.name }}"><br><br>  --important
+
+    Value (must be 'No'):<br>
+    <input type="text" name="value" value="{{ data.value }}"><br><br>. --important
+
+
+
+
+
+    <button type="submit">Submit</button>
+</form>
+
+</body>
+</html>

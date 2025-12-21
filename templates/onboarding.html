@@ -1,0 +1,158 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Onboarding</title>
+
+    <style>
+        /* Make the whole page a flexbox and center everything */
+        body {
+            margin: 0;
+            height: 100vh;                 /* full screen height */
+            display: flex;
+            flex-direction: column;        /* vertical layout */
+            justify-content: center;       /* vertical centering */
+            align-items: center;           /* horizontal centering */
+            background: #ffffff;
+        }
+
+        /* Center the main heading */
+        h2 {
+            text-align: center;
+            margin-bottom: 30px;           /* space between heading and forms */
+        }
+
+        /* Container that holds the 3 forms side-by-side */
+        .form-container {
+            display: flex;
+            gap: 30px;
+            justify-content: center;
+        }
+
+        /* Individual form blocks */
+        .form-box {
+            border: 1px solid #ccc;
+            padding: 20px;
+            width: 300px;
+            border-radius: 8px;
+            background: #f9f9f9;
+        }
+
+        .form-box h3 {
+            text-align: center;
+        }
+
+        .form-box label {
+            font-weight: bold;
+        }
+
+        .form-box input,
+.form-box select {
+    width: 100%;
+    padding: 6px;
+    font-size: 16px;
+    height: 36px; 
+    margin-top: 4px;
+    margin-bottom: 6px;
+    box-sizing: border-box;
+}
+
+
+        button {
+            margin-top: 10px;
+            padding: 8px 15px;
+            width: 100%;
+        }
+        /* Home button style */
+
+.home-button {
+     position: absolute;   /* <-- this is the key */
+            margin-top: 10px;
+            padding: 8px 15px;
+            width: auto;
+            top: 40px;
+            left: 40px;
+        
+        }
+ 
+    </style>
+</head>
+
+
+
+<body>
+ <button class="home-button" type="button" onclick="window.location.href='/'">Home</button>
+
+
+
+
+<div class="form-container">
+
+    <!-- FORM 1 -->
+    <form method="POST" class="form-box">
+        <h3>Add New Client</h3>
+
+        <label>Client Name:</label>
+        <input type="text" name="client_name" required><br><br>
+
+        <label>Site Name:</label>
+        <input type="text" name="site_name" required><br><br>
+
+        <div>
+    <label for="contract_type" style="display:block; margin-bottom:4px;">Client Category:</label>
+
+    <select name="contract_type" id="contract_type" required>
+        <option value="" disabled selected>Select a category</option>
+        {% for cat in client_categories %}
+            <option value="{{ cat }}">{{ cat }}</option>
+        {% endfor %}
+    </select>
+</div>
+
+
+
+
+        <div>
+            <label>Entry Date:</label>
+            <input type="date" name="entry_date">
+        </div>
+
+        <label>Contract Amount:</label>
+        <input type="number" step="0.01" name="contract_amount" required><br><br>
+
+        <label>Venture ID:</label>
+        <input type="text" name="venture_id" disabled><br><br>
+
+        <button type="submit" name="form_type" value="add_client">Submit</button>
+    </form>
+
+    <!-- FORM 2 -->
+    <form method="POST" class="form-box">
+        <h3>Add New Supplier</h3>
+
+        <label>Supplier Name:</label>
+        <input type="text" name="supplier_name" required><br><br>
+
+        <label>Supplier ID:</label>
+        <input type="text" name="supplier_id" disabled><br><br>
+
+        <button type="submit" name="form_type" value="add_supplier">Submit</button>
+    </form>
+
+    <!-- FORM 3 -->
+    <form method="POST" class="form-box">
+        <h3>Add New Contractor</h3>
+
+        <label>Contractor Name:</label>
+        <input type="text" name="contractor_name" required><br><br>
+
+        <label>Contractor ID:</label>
+        <input type="text" name="contractor_id" disabled><br><br>
+
+        <button type="submit" name="form_type" value="add_contractor">Submit</button>
+
+    </form>
+
+</div>
+
+</body>
+</html>
