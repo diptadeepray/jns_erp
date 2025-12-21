@@ -53,6 +53,7 @@
 
     <h1>{{ header }}</h1>
 
+    <div class="table-section">
     {% if rows %}
     <table>
         <tr>
@@ -72,6 +73,42 @@
     {% else %}
         <p>No data found.</p>
     {% endif %}
+</div>
+
+<br>
+
+
+
+   <div class="table-section">
+    {% if rows_office %}
+    <table>
+        <tr>
+            {% for col in columns_office %}
+                <th>{{ col }}</th>
+            {% endfor %}
+        </tr>
+
+        {% for row in rows_office %}
+        <tr>
+            {% for col in columns_office %}
+                <td>{{ row[col] }}</td>
+            {% endfor %}
+        </tr>
+        {% endfor %}
+    </table>
+    {% else %}
+        <p>No data found.</p>
+    {% endif %}
+</div>
+
+
+
+
+<br>
+
+<p>{{ total_profit }}</p>
+
+
 
 </body>
 </html>
