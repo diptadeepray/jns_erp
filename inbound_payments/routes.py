@@ -88,7 +88,7 @@ def inbound_payments_home():
         check_site_name=request.form.get("site_name")
         known_venture_id = request.form.get("venture_id")
 
-        print("Went correctly")
+        #print("Went correctly")
 
 
         conn = get_db_connection()
@@ -110,7 +110,6 @@ def inbound_payments_home():
                 message = "Previous entry was successfully added."
 
 
-                # Indentaion level indicates this code is inside the above if-block
                         
 
 
@@ -126,15 +125,15 @@ def inbound_payments_home():
 
 
 
-                # Extract posted fields
+                
                 fields = [
                 "source", "category", "client_name", "site_name", "venture_id",
                 "supplier_name", "supplier_id", "cash_amount", "cheque_amount",
                 "total_amount", "amount_number", "cash_name", "cheque_name",
                 "cheque_date", "cheque_bank", "cheque_number",
-                "entry_date", "ar_id"
-            ]
+                "entry_date", "ar_id"]
 
+                # Extract all posted fields at once
                 data = [request.form.get(f) for f in fields]
 
 
@@ -163,7 +162,7 @@ def inbound_payments_home():
                     print("Unknown category entered. Check code very carefully")
 
                 
-                print(type(data[9]), type(breakup[0]))  # Debug print to check types
+                # print(type(data[9]), type(breakup[0]))    # Debug print to check types
 
 
                 # ===== INSERT INTO expected_ap =====
@@ -206,10 +205,21 @@ def inbound_payments_home():
                 conn.commit()
                 
                 conn.close()
-                # it automatically closes all associated cursors.
+
+                print(f"Data inserted {data}")
 
 
-
+                # The following redirect line is redundant for the following reason:
+                '''<input name="venture_id" disabled>  is disabled initially in HTML form.
+                   So venture_id was not being sent in the POST request on refresh.
+                   So Flask received request.form.get("venture_id") = None.
+                   There is a else block which says "No match found. Check everything carefully"
+                   So duplicate entry was not happening on refresh.'''
+                #return redirect('/inbound_payments')
+                #Why this line is commented out?
+                '''When you call redirect(), Flask tells the browser: 
+                   "Go make a new GET request to /inbound_payments."
+                   Any variables in memory (like message) are lost because a new request is happening.'''
 
 
 
@@ -224,42 +234,20 @@ def inbound_payments_home():
 
             else:
                 print("Mismatch found:")
-                if actual_client_name != check_client_name:
-                    print(f"Client Name mismatch: expected {actual_client_name}, got {check_client_name}")
-                    message = f"Client Name mismatch: expected {actual_client_name}, got {check_client_name}. Validation done with Venture_ID"
                 if actual_site_name != check_site_name:
                     print(f"Site Name mismatch: expected {actual_site_name}, got {check_site_name}")
                     message = f"Site Name mismatch: expected {actual_site_name}, got {check_site_name}. Validation done with Venture_ID."
                 if actual_contract_type != check_category:
                     print(f"Category mismatch: expected {actual_contract_type}, got {check_category}")
                     message = f"Category mismatch: expected {actual_contract_type}, got {check_category}. Validation done with Venture_ID"
+                if actual_client_name != check_client_name:
+                    print(f"Client Name mismatch: expected {actual_client_name}, got {check_client_name}")
+                    message = f"Client Name mismatch: expected {actual_client_name}, got {check_client_name}. Validation done with Venture_ID"
         else:
             print("No match found. Check everything carefully")
-            message = "Previous entry did not exist."
+            message = "The entered VentureID does not exist."
 
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-        
-        
-        
-    
 
 
 

@@ -21,18 +21,18 @@ def onboarding_home():
     # === FETCH DROPDOWN DATA FROM onboarding TABLE ===
     c.execute("SELECT client_name, site_name, venture_id FROM all_clients")
     client_data = c.fetchall()   
-    # List of rows (client_name, site_name, venture_id) 
-    # Returns a list of tuples
+    # # List of rows (client_name, site_name, venture_id) 
+    # # Returns a list of tuples
 
-    c.execute("SELECT supplier_name, supplier_id FROM all_suppliers")
+    # c.execute("SELECT supplier_name, supplier_id FROM all_suppliers")
     supplier_data = c.fetchall()  
-    # List of rows (supplier_name, supplier_id)
-    # Returns a list of tuples
+    # # List of rows (supplier_name, supplier_id)
+    # # Returns a list of tuples
 
-    c.execute("SELECT contractor_name, contractor_id FROM all_contractors")
+    # c.execute("SELECT contractor_name, contractor_id FROM all_contractors")
     contractor_data = c.fetchall()  
-    # List of rows (contractor_name, contractor_id)
-    # Returns a list of tuples
+    # # List of rows (contractor_name, contractor_id)
+    # # Returns a list of tuples
     
     if request.method == 'POST':
         form_type = request.form.get("form_type")
@@ -104,5 +104,5 @@ def onboarding_home():
     
 
 
-    return render_template('onboarding.html', client_data=client_data, client_categories=client_categories,
-                           supplier_data=supplier_data, contractor_data=contractor_data)
+    return render_template('onboarding.html')
+#, client_data=client_data, client_categories=client_categories,supplier_data=supplier_data, contractor_data=contractor_data)
