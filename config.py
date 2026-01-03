@@ -41,3 +41,11 @@ OFFICE_EXPENSE_CATEGORIES = [
     "Telephone Charges",
     "Travelling & Conveyance"
 ]
+
+
+CONTRACTOR_WORK_CATEGORIES = [
+    "Electrical Work",
+    "Civil Work",
+    "Plumbing Work",
+    "Interior Work",
+    "Exterior Work"]

@@ -138,6 +138,27 @@ def inbound_payments_home():
 
 
 
+                print(data)
+
+                # Get the index
+                cash_index = fields.index("cash_amount")
+                cheque_index = fields.index("cheque_amount")
+                total_index = fields.index("total_amount")
+
+                cash_value = float(data[cash_index].replace(",", "")) if data[cash_index] else 0
+                cheque_value = float(data[cheque_index].replace(",", "")) if data[cheque_index] else 0
+
+                # Put the cleaned values back into the list
+                data[cash_index] = cash_value
+                data[cheque_index] = cheque_value
+
+                # Compute total_amount and put it into the list
+                data[total_index] = cash_value + cheque_value
+
+                print(data)
+
+
+
                 c.execute("""
                 INSERT INTO inbound_payments 
                 (source, category, client_name, site_name, venture_id,
@@ -174,7 +195,7 @@ def inbound_payments_home():
                 request.form.get("venture_id"),
                 request.form.get("supplier_name"),
                 request.form.get("supplier_id"),
-                request.form.get("total_amount"),   # → total_amount_received_from_that_party
+                data[total_index],   # → total_amount_received_from_that_party
 
             
                 # You need to convert to float for multiplication
@@ -185,10 +206,10 @@ def inbound_payments_home():
 
                 # But to be safe, we convert explicitly here
 
-                float(data[9])*breakup[0],   # expected_office_expense (default)
-                float(data[9])*breakup[1],   # expected_material_expense (default)
-                float(data[9])*breakup[2],   # expected_labour_expense (default)
-                float(data[9])*breakup[3]   # expected_profit (default)
+                float(data[total_index])*breakup[0],   # expected_office_expense (default)
+                float(data[total_index])*breakup[1],   # expected_material_expense (default)
+                float(data[total_index])*breakup[2],   # expected_labour_expense (default)
+                float(data[total_index])*breakup[3]   # expected_profit (default)
                         ]
 
                 c.execute("""
@@ -206,7 +227,7 @@ def inbound_payments_home():
                 
                 conn.close()
 
-                print(f"Data inserted {data}")
+                print(f"Data inserted {expected_ap_data}")
 
 
                 # The following redirect line is redundant for the following reason:

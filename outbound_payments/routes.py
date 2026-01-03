@@ -105,6 +105,39 @@ def outbound_payments_home():
                 # Read values from HTML form
                 data = [request.form.get(f) for f in fields]
 
+
+
+
+
+
+                print(data)
+
+                # Get the index
+                cash_index = fields.index("cash_amount")
+                cheque_index = fields.index("cheque_amount")
+                total_index = fields.index("total_amount")
+
+                cash_value = float(data[cash_index].replace(",", "")) if data[cash_index] else 0
+                cheque_value = float(data[cheque_index].replace(",", "")) if data[cheque_index] else 0
+
+                # Put the cleaned values back into the list
+                data[cash_index] = cash_value
+                data[cheque_index] = cheque_value
+
+                # Compute total_amount and put it into the list
+                data[total_index] = cash_value + cheque_value
+
+                print(data)
+
+
+
+
+
+
+
+
+
+
                 # Insert query MUST match the column order above
                 c.execute("""
                     INSERT INTO outbound_payments (

@@ -6,28 +6,6 @@ import sqlite3, os
 
 
 
-def delete_table():
-
-
-        # Connect to the database
-        conn = sqlite3.connect("database.db")
-        c = conn.cursor()
-
-        # Delete the table
-        c.execute("DROP TABLE IF EXISTS all_contracters")
-
-        conn.commit()
-        conn.close()
-
-# delete_table()
-
-
-
-
-
-
-
-
 
 
 def creating_demo_table():
@@ -62,15 +40,17 @@ def creating_onboarding_tables():
 
         c = conn.cursor()
 
-        c.execute(""" CREATE TABLE IF NOT EXISTS all_clients 
-                  ( id INTEGER PRIMARY KEY AUTOINCREMENT, client_name TEXT, 
-                    site_name TEXT, contract_type TEXT, entry_date TEXT, 
-                    contract_amount REAL, venture_id TEXT ) """)
+        # c.execute(""" CREATE TABLE IF NOT EXISTS all_clients 
+        #           ( id INTEGER PRIMARY KEY AUTOINCREMENT, client_name TEXT, 
+        #             site_name TEXT, contract_type TEXT, entry_date TEXT, 
+        #             contract_amount REAL, venture_id TEXT ) """)
         c.execute(""" CREATE TABLE IF NOT EXISTS all_suppliers 
-                  ( id INTEGER PRIMARY KEY AUTOINCREMENT, supplier_name TEXT, 
+                  ( id INTEGER PRIMARY KEY AUTOINCREMENT, supplier_name TEXT,
+                  supplier_firm_name TEXT, 
                     supplier_id TEXT ) """)
         c.execute(""" CREATE TABLE IF NOT EXISTS all_contractors
-                  ( id INTEGER PRIMARY KEY AUTOINCREMENT, contractor_name TEXT, 
+                  ( id INTEGER PRIMARY KEY AUTOINCREMENT, contractor_name TEXT,
+                  contractor_type TEXT, 
                     contractor_id TEXT ) """)
         
 
@@ -83,7 +63,7 @@ def creating_onboarding_tables():
         
         conn.commit()
         conn.close()
-# creating_onboarding_tables()
+creating_onboarding_tables()
 
 
 
@@ -212,36 +192,3 @@ def creating_expected_ap_table():
         conn.close()
 
 #creating_expected_ap_table()
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-def know_database_details():
-        conn = sqlite3.connect("database.db")
-        c = conn.cursor()
-
-        c.execute("SELECT name FROM sqlite_master WHERE type='table';")
-        tables = c.fetchall()
-
-        print("Tables:")
-        for t in tables:
-                print(t[0])
-
-        conn.close()
-# know_database_details()

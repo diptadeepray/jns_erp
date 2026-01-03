@@ -16,6 +16,7 @@ QUERY1 ="""SELECT
     venture_id "Venture ID",
     total_amount_to_be_received_that_party "Total Amount to be Received that Party",
     total_amount_received_from_that_party "Total Amount Received from that Party",
+    total_amount_to_be_received_from_that_party "Total Amount to be Received from that Party",
     expected_material_expense "Expected Sitewise Material Expense",
     actual_sitewise_material_expense "Actual Sitewise Material Expense",
     supplier_difference "Sitewise Supplier Balance",
@@ -31,6 +32,9 @@ FROM
         all_clients.venture_id AS venture_id,
         all_clients.contract_amount AS total_amount_to_be_received_that_party,
         expected_supplier.total_amount AS total_amount_received_from_that_party,
+        COALESCE(all_clients.contract_amount, 0) - COALESCE(expected_supplier.total_amount, 0)
+                                           AS total_amount_to_be_received_from_that_party,
+
 
         expected_supplier.supplier_total AS expected_material_expense,
         actual_supplier.supplier_total AS actual_sitewise_material_expense,
@@ -44,6 +48,7 @@ FROM
 
         expected_profit.expected_site_profit AS expected_sitewise_profit,
         expected_profit.expected_site_office_expense AS expected_sitewise_office_expense
+
     FROM (SELECT venture_id, contract_amount FROM all_clients) all_clients
     LEFT JOIN (
         SELECT venture_id,
@@ -88,6 +93,7 @@ SELECT
     'TOTAL',
     SUM(total_amount_to_be_received_that_party),
     SUM(total_amount_received_from_that_party),
+    SUM(total_amount_to_be_received_from_that_party),
     SUM(expected_material_expense),
     SUM(actual_sitewise_material_expense),
     SUM(supplier_difference),
@@ -102,6 +108,10 @@ FROM
     SELECT 
         all_clients.contract_amount AS total_amount_to_be_received_that_party,
         expected_supplier.total_amount AS total_amount_received_from_that_party,
+        COALESCE(all_clients.contract_amount, 0) - COALESCE(expected_supplier.total_amount, 0)
+                                           AS total_amount_to_be_received_from_that_party,
+
+
         expected_supplier.supplier_total AS expected_material_expense,
         actual_supplier.supplier_total AS actual_sitewise_material_expense,
         COALESCE(expected_supplier.supplier_total,0) 
@@ -200,9 +210,9 @@ def view_data():
     if rows:
         columns = rows[0].keys()
         total_last_row = rows[-1]  # last row
-        total_expected_profit = total_last_row["Expected Sitewise Profit"]
-        supplier_total_balance = total_last_row["Sitewise Supplier Balance"]
-        contractor_total_balance = total_last_row["Sitewise Contractor Balance"]
+        total_expected_profit = total_last_row["Expected Sitewise Profit"] or 0
+        supplier_total_balance = total_last_row["Sitewise Supplier Balance"] or 0
+        contractor_total_balance = total_last_row["Sitewise Contractor Balance"] or 0
         expected_office_expense = total_last_row["Expected Sitewise Office Expense"] or 0
         
 
@@ -217,6 +227,12 @@ def view_data():
         actual_office_expense = total_last_row_office["Expense Amount"] or 0
     else:
         columns_office = []
+
+    print(type(total_expected_profit))
+    print(type(supplier_total_balance))
+    print(type(contractor_total_balance))
+    print(type(expected_office_expense))
+    print(type(actual_office_expense))  
 
     total_profit= (total_expected_profit
                    + supplier_total_balance

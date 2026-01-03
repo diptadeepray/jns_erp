@@ -31,7 +31,7 @@ def know_database_details():
 
 import sqlite3
 
-def know_database_details():
+def know_database_details2():
     conn = sqlite3.connect("database.db")
     c = conn.cursor()
 
@@ -56,7 +56,7 @@ def know_database_details():
 
     conn.close()
 
-#know_database_details()
+# know_database_details2()
 
 
 
@@ -91,7 +91,7 @@ def view_table_data(table_name):
         # Close the connection
         conn.close()
 
-view_table_data('expected_ap')
+view_table_data('all_suppliers')
 
 
 

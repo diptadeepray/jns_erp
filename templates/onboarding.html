@@ -111,13 +111,15 @@
 
 
 
+
+
+        <label>Contract Amount:</label>
+        <input type="text" name="contract_amount" required><br><br>
+
         <div>
             <label>Entry Date:</label>
             <input type="date" name="entry_date">
         </div>
-
-        <label>Contract Amount:</label>
-        <input type="number" step="0.01" name="contract_amount" required><br><br>
 
         <label>Venture ID:</label>
         <input type="text" name="venture_id" disabled><br><br>
@@ -132,6 +134,9 @@
         <label>Supplier Name:</label>
         <input type="text" name="supplier_name" required><br><br>
 
+        <label>Supplier Firm Name:</label>
+        <input type="text" name="supplier_firm_name" required><br><br>
+
         <label>Supplier ID:</label>
         <input type="text" name="supplier_id" disabled><br><br>
 
@@ -145,8 +150,21 @@
         <label>Contractor Name:</label>
         <input type="text" name="contractor_name" required><br><br>
 
-        <label>Contractor ID:</label>
+
+<div>
+    <label for="contractor_type" style="display:block; margin-bottom:4px;">Contractor Work Category:</label>
+
+    <select name="contractor_type" id="contractor_type" required>
+        <option value="" disabled selected>Select a category</option>
+        {% for cat in contractor_work_categories %}
+            <option value="{{ cat }}">{{ cat }}</option>
+        {% endfor %}
+    </select>
+</div>
+
+   <label>Contractor ID:</label>
         <input type="text" name="contractor_id" disabled><br><br>
+
 
         <button type="submit" name="form_type" value="add_contractor">Submit</button>
 

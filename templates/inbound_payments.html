@@ -60,6 +60,16 @@
 
 
 
+
+input:disabled {
+    background-color: #f0f0f0;   /* lighter grey */
+    color: #777;                 /* text remains greyed-out */
+}
+
+
+
+
+
      
 
         /* Small spacing below the form */
@@ -254,22 +264,22 @@
 
         <div>
             <label>Cash Amount:</label>
-            <input type="number" step="0.01" name="cash_amount">
+            <input type="text" name="cash_amount">
         </div>
 
         <div>
             <label>Cheque Amount:</label>
-            <input type="number" step="0.01" name="cheque_amount">
+            <input type="text" name="cheque_amount">
         </div>
 
         <div>
             <label>Total Amount:</label>
-            <input type="number" step="0.01" name="total_amount">
+            <input type="text" name="total_amount" disabled>
         </div>
 
         <div>
             <label>Amount Number:</label>
-            <input type="text" name="amount_number">
+            <input type="text" name="amount_number" disabled>
         </div>
 
         <div>
@@ -304,7 +314,7 @@
 
         <div>
             <label>AR ID:</label>
-            <input type="text" name="ar_id">
+            <input type="text" name="ar_id" disabled>
         </div>
 
     </div> <!-- End grid -->
