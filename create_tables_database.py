@@ -63,7 +63,7 @@ def creating_onboarding_tables():
         
         conn.commit()
         conn.close()
-creating_onboarding_tables()
+# creating_onboarding_tables()
 
 
 
@@ -192,3 +192,41 @@ def creating_expected_ap_table():
         conn.close()
 
 #creating_expected_ap_table()
+
+
+
+
+
+
+def creating_supplier_inbound_table():
+        
+        conn = sqlite3.connect("database.db")
+        # If database.db already exists → SQLite opens the existing file.
+        # If database.db does NOT exist → SQLite creates a new empty database file, then opens it.       
+
+        c = conn.cursor()
+
+        # Create table
+        c.execute("""
+    CREATE TABLE IF NOT EXISTS supplier_inbound (
+    id INTEGER PRIMARY KEY AUTOINCREMENT,
+    source TEXT,
+    category TEXT,
+    client_name TEXT,
+    site_name TEXT,
+    venture_id TEXT,
+    supplier_name TEXT,
+    supplier_id TEXT,
+    total_amount_received_from_that_party REAL,
+    expected_office_expense REAL,
+    expected_material_expense REAL,
+    expected_labour_expense REAL,
+    expected_profit REAL
+)
+""")
+
+        
+        conn.commit()
+        conn.close()
+
+creating_supplier_inbound_table()

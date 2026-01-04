@@ -88,6 +88,8 @@ def inbound_payments_home():
         check_site_name=request.form.get("site_name")
         known_venture_id = request.form.get("venture_id")
 
+        given_supplier_id = request.form.get("supplier_id")
+
         #print("Went correctly")
 
 
@@ -102,12 +104,12 @@ def inbound_payments_home():
 
         row = c.fetchone()
 
-        if row:
+        if row and (given_supplier_id is None ):
             actual_client_name, actual_site_name, actual_contract_type = row
             if (actual_client_name == check_client_name and 
                 actual_site_name == check_site_name and
                 actual_contract_type == check_category):
-                message = "Previous entry was successfully added."
+                message = "Previous entry of client was successfully added."
 
 
                         
@@ -176,6 +178,7 @@ def inbound_payments_home():
                 breakup = [0,0,0,0]  # Initialize breakup
 
                 if data[0].lower()=="client":
+                    # The category is taken as key of the dictionary-CLIENT_MONEY_DISTRIBUTION_CATEGORYWISE
                     breakup=CLIENT_MONEY_DISTRIBUTION_CATEGORYWISE[data[1]]
                 elif data[0].lower()=="supplier":
                     breakup=SUPPLIER_MONEY_DISTRIBUTION[data[1]]
@@ -246,7 +249,7 @@ def inbound_payments_home():
 
 
 
-
+        
 
 
 
@@ -264,9 +267,63 @@ def inbound_payments_home():
                 if actual_client_name != check_client_name:
                     print(f"Client Name mismatch: expected {actual_client_name}, got {check_client_name}")
                     message = f"Client Name mismatch: expected {actual_client_name}, got {check_client_name}. Validation done with Venture_ID"
+
+
+
+
+        elif (row is None) and given_supplier_id:
+            message = "Previous entry of supplier was successfully added."
+
+                
+            fields = [
+                "source", "category", "client_name", "site_name", "venture_id",
+                "supplier_name", "supplier_id", "cash_amount", "cheque_amount",
+                "total_amount", "amount_number", "cash_name", "cheque_name",
+                "cheque_date", "cheque_bank", "cheque_number",
+                "entry_date", "ar_id"]
+
+            # Extract all posted fields at once
+            data = [request.form.get(f) for f in fields]
+
+
+
+            print(data)
+
+                # Get the index
+            cash_index = fields.index("cash_amount")
+            cheque_index = fields.index("cheque_amount")
+            total_index = fields.index("total_amount")
+
+            cash_value = float(data[cash_index].replace(",", "")) if data[cash_index] else 0
+            cheque_value = float(data[cheque_index].replace(",", "")) if data[cheque_index] else 0
+
+                # Put the cleaned values back into the list
+            data[cash_index] = cash_value
+            data[cheque_index] = cheque_value
+
+                # Compute total_amount and put it into the list
+            data[total_index] = cash_value + cheque_value
+
+            print(data)
+
+
+
+            c.execute("""
+                INSERT INTO inbound_payments 
+                (source, category, client_name, site_name, venture_id,
+                supplier_name, supplier_id, cash_amount, cheque_amount, total_amount,
+                amount_number, cash_name, cheque_name, cheque_date, cheque_bank,
+                cheque_number, entry_date, ar_id)
+                VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
+            """, data)
+
+            conn.commit()
+                
+            conn.close()
+        
         else:
             print("No match found. Check everything carefully")
-            message = "The entered VentureID does not exist."
+            message = "The entered VentureID/SupplierID does not exist."
 
 
 

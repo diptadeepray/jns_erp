@@ -37,7 +37,7 @@
 
         th, td {
             border: 1px solid #777;
-            padding: 8px;
+            padding: 1px;
             text-align: center;
             white-space: nowrap; /* prevent text from wrapping */
         }
@@ -91,6 +91,38 @@
         {% for row in rows_office %}
         <tr>
             {% for col in columns_office %}
+                <td>{{ row[col] }}</td>
+            {% endfor %}
+        </tr>
+        {% endfor %}
+    </table>
+    {% else %}
+        <p>No data found.</p>
+    {% endif %}
+</div>
+
+
+
+
+<p style="color: red; font-size: 22px;">
+    Office Expense Balance : {{ office_expense_balance }}
+</p>
+
+
+
+
+<div class="table-section">
+    {% if rows_supplier_promotion %}
+    <table>
+        <tr>
+            {% for col in columns_supplier_promotion %}
+                <th>{{ col }}</th>
+            {% endfor %}
+        </tr>
+
+        {% for row in rows_supplier_promotion %}
+        <tr>
+            {% for col in columns_supplier_promotion %}
                 <td>{{ row[col] }}</td>
             {% endfor %}
         </tr>

@@ -47,7 +47,9 @@ def outbound_payments_home():
         check_site_name=request.form.get("site_name")
         known_venture_id = request.form.get("venture_id")
 
-        #print("Went correctly")
+        office_reason = request.form.get("office_reason")
+
+        print("The enterd row is ",check_client_name, check_site_name, known_venture_id, office_reason)
 
 
         conn = get_db_connection()
@@ -60,12 +62,15 @@ def outbound_payments_home():
 """, (known_venture_id,))
 
         row = c.fetchone()
+        print(f"The extracted row is {row}")
 
-        if row:
+
+# If row is found, and office_reason is None, then it's a site payment entry
+        if row and (office_reason is None):
             actual_client_name, actual_site_name = row
             if (actual_client_name == check_client_name and 
                 actual_site_name == check_site_name):
-                message = "Previous entry was successfully added."
+                message = "Previous site entry was successfully added."
 
 
 
@@ -137,6 +142,7 @@ def outbound_payments_home():
 
 
 
+# There is only one table of outbound_payments, here we store sitewise payments and office_expenses
 
                 # Insert query MUST match the column order above
                 c.execute("""
@@ -169,6 +175,9 @@ def outbound_payments_home():
 
         #------------------------------
 
+
+
+# Just telling the user what went wrong
             else:
                 print("Mismatch found:")
                 if actual_site_name != check_site_name:
@@ -178,10 +187,102 @@ def outbound_payments_home():
                     print(f"Client Name mismatch: expected {actual_client_name}, got {check_client_name}")
                     message = f"Client Name mismatch: expected {actual_client_name}, got {check_client_name}. Validation done with Venture_ID"
 
+# First if-this block will be executed if this is an office expense entry
+        elif (not row) and office_reason:
+            # Second if for office expense entry
+            # Insert office expense entry
+            # Extract posted fields — MUST match your SQLite table columns
+
+            message = "Previous office expense entry was successfully added."
+            print("Entered in office block")
+
+            # Extract posted fields — MUST match your SQLite table columns
+            fields = [
+                    "destination",
+                    "client_name",
+                    "site_name",
+                    "venture_id",
+                    "supplier_name",
+                    "supplier_id",
+                    "material_description",
+                    "contractor_name",
+                    "contractor_id",
+                    "labour_description",
+                    "office_reason",
+                    "cash_amount",
+                    "cheque_amount",
+                    "total_amount",
+                    "amount_number",
+                    "cash_name",
+                    "cheque_name",
+                    "cheque_date",
+                    "cheque_bank",
+                    "cheque_number",
+                    "entry_date",
+                    "actual_ap_id"
+                ]
+
+                # Read values from HTML form
+            data = [request.form.get(f) for f in fields]
+
+
+
+
+
+
+            print(data)
+
+            # Get the index
+            cash_index = fields.index("cash_amount")
+            cheque_index = fields.index("cheque_amount")
+            total_index = fields.index("total_amount")
+
+            cash_value = float(data[cash_index].replace(",", "")) if data[cash_index] else 0
+            cheque_value = float(data[cheque_index].replace(",", "")) if data[cheque_index] else 0
+
+            # Put the cleaned values back into the list
+            data[cash_index] = cash_value
+            data[cheque_index] = cheque_value
+
+            # Compute total_amount and put it into the list
+            data[total_index] = cash_value + cheque_value
+
+            print(data)
+            print("Data prepared")
+
+
+
+
+
+
+
+
+
+# There is only one table of outbound_payments, here we store sitewise payments and office_expenses
+
+                # Insert query MUST match the column order above
+            c.execute("""
+                    INSERT INTO outbound_payments (
+                        destination, client_name, site_name, venture_id,
+                        supplier_name, supplier_id, material_description,
+                        contractor_name, contractor_id, labour_description,
+                        office_reason, cash_amount, cheque_amount, total_amount,
+                        amount_number, cash_name, cheque_name, cheque_date,
+                        cheque_bank, cheque_number, entry_date, actual_ap_id
+                    )
+                    VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
+                """, data)
+            print("Data put in table")
+
+            conn.commit()
+            conn.close()
+
+
 
         else:
-            print("No match found. Check everything carefully")
-            message = "The entered VentureID does not exist."
+        # First if failed
+            print("No match found for client. Entered VentureID does not exist.")
+            message = "The entered VentureID does not exist. Or Office reason is not provided for office expense entry."
 
 
 
@@ -192,3 +293,4 @@ def outbound_payments_home():
 
 
     return render_template('outbound_payments.html', office_expense_categories=OFFICE_EXPENSE_CATEGORIES, client_data=client_data, supplier_data=supplier_data, contractor_data=contractor_data, message=message)
+

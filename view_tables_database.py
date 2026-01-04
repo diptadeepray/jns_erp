@@ -21,7 +21,7 @@ def know_database_details():
                 print(t[0])
 
         conn.close()
-# know_database_details()
+#know_database_details()
 
 
 
@@ -91,7 +91,7 @@ def view_table_data(table_name):
         # Close the connection
         conn.close()
 
-view_table_data('all_suppliers')
+view_table_data('inbound_payments')
 
 
 

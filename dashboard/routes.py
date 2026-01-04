@@ -13,23 +13,23 @@ dashboard_bp = Blueprint('dashboard', __name__)
 # ---- 1 PREDEFINED QUERY ----
 
 QUERY1 ="""SELECT 
-    venture_id "Venture ID",
-    total_amount_to_be_received_that_party "Total Amount to be Received that Party",
-    total_amount_received_from_that_party "Total Amount Received from that Party",
-    total_amount_to_be_received_from_that_party "Total Amount to be Received from that Party",
-    expected_material_expense "Expected Sitewise Material Expense",
-    actual_sitewise_material_expense "Actual Sitewise Material Expense",
-    supplier_difference "Sitewise Supplier Balance",
-    expected_sitewise_labour_expense "Expected Sitewise Labour Expense",
-    actual_sitewise_actual_labour_expense "Actual Sitewise Actual Labour Expense",
-    contractor_difference "Sitewise Contractor Balance",
-    expected_sitewise_profit "Expected Sitewise Profit",
-    expected_sitewise_office_expense "Expected Sitewise Office Expense"
+    client_name "Client Name",
+    total_amount_to_be_received_that_party "Contract Amount",
+    total_amount_received_from_that_party "Amount Received",
+    total_amount_to_be_received_from_that_party "Amount Pending",
+    expected_material_expense "Expected Material",
+    actual_sitewise_material_expense "Actual Material",
+    supplier_difference "Supplier Balance",
+    expected_sitewise_labour_expense "Expected Labour",
+    actual_sitewise_actual_labour_expense "Actual Labour",
+    contractor_difference "Contractor Balance",
+    expected_sitewise_profit "Expected Profit",
+    expected_sitewise_office_expense "Expected Office"
 FROM
 (
     -- ================= BASE DATA =================
     SELECT 
-        all_clients.venture_id AS venture_id,
+        all_clients.client_name AS client_name,
         all_clients.contract_amount AS total_amount_to_be_received_that_party,
         expected_supplier.total_amount AS total_amount_received_from_that_party,
         COALESCE(all_clients.contract_amount, 0) - COALESCE(expected_supplier.total_amount, 0)
@@ -49,12 +49,13 @@ FROM
         expected_profit.expected_site_profit AS expected_sitewise_profit,
         expected_profit.expected_site_office_expense AS expected_sitewise_office_expense
 
-    FROM (SELECT venture_id, contract_amount FROM all_clients) all_clients
+    FROM (SELECT venture_id, client_name, contract_amount FROM all_clients) all_clients
     LEFT JOIN (
         SELECT venture_id,
                SUM(total_amount) AS total_amount,
                SUM(expected_material_expense) AS supplier_total
         FROM expected_ap
+        WHERE venture_id IS NOT NULL
         GROUP BY venture_id
     ) expected_supplier ON all_clients.venture_id = expected_supplier.venture_id
     LEFT JOIN (
@@ -68,6 +69,7 @@ FROM
         SELECT venture_id,
                SUM(expected_labour_expense) AS contractor_total
         FROM expected_ap
+        WHERE venture_id IS NOT NULL
         GROUP BY venture_id
     ) expected_contractor ON all_clients.venture_id = expected_contractor.venture_id
     LEFT JOIN (
@@ -82,6 +84,7 @@ FROM
                SUM(expected_profit) AS expected_site_profit,
                SUM(expected_office_expense) AS expected_site_office_expense
         FROM expected_ap
+        WHERE venture_id IS NOT NULL
         GROUP BY venture_id
     ) expected_profit ON all_clients.venture_id = expected_profit.venture_id
 )
@@ -128,6 +131,7 @@ FROM
                SUM(total_amount) AS total_amount,
                SUM(expected_material_expense) AS supplier_total
         FROM expected_ap
+        WHERE venture_id IS NOT NULL
         GROUP BY venture_id
     ) expected_supplier ON all_clients.venture_id = expected_supplier.venture_id
     LEFT JOIN (
@@ -141,6 +145,7 @@ FROM
         SELECT venture_id,
                SUM(expected_labour_expense) AS contractor_total
         FROM expected_ap
+        WHERE venture_id IS NOT NULL
         GROUP BY venture_id
     ) expected_contractor ON all_clients.venture_id = expected_contractor.venture_id
     LEFT JOIN (
@@ -155,6 +160,7 @@ FROM
                SUM(expected_profit) AS expected_site_profit,
                SUM(expected_office_expense) AS expected_site_office_expense
         FROM expected_ap
+        WHERE venture_id IS NOT NULL
         GROUP BY venture_id
     ) expected_profit ON all_clients.venture_id = expected_profit.venture_id
 );
@@ -172,11 +178,31 @@ QUERY2 = """
          
          UNION ALL
 
-   SELECT 'TOTAL', sum(total_amount_per_reason) FROM (SELECT office_reason,
+   SELECT 'TOTAL', 
+         sum(total_amount_per_reason) FROM (SELECT office_reason,
          SUM(total_amount) AS total_amount_per_reason
          FROM outbound_payments
          WHERE office_reason IS NOT NULL
          GROUP BY office_reason)
+
+         ;
+"""
+# ---- 3 PREDEFINED QUERY ----
+QUERY3 = """
+  SELECT supplier_id "Supplier ID", 
+         SUM(total_amount) "Promotional Amount"
+         FROM inbound_payments
+         WHERE supplier_id IS NOT NULL
+         GROUP BY supplier_id
+         
+         UNION ALL
+
+   SELECT 'TOTAL', 
+         sum(total_amount_per_reason) FROM (SELECT supplier_id,
+         SUM(total_amount) AS total_amount_per_reason
+         FROM inbound_payments
+         WHERE supplier_id IS NOT NULL
+         GROUP BY supplier_id)
 
          ;
 """
@@ -205,15 +231,16 @@ def run_query(query):
 def view_data():
     rows = run_query(QUERY1)
     rows_office = run_query(QUERY2)
+    rows_supplier_promotion = run_query(QUERY3)
 
     # Extract column names from the first row
     if rows:
         columns = rows[0].keys()
         total_last_row = rows[-1]  # last row
-        total_expected_profit = total_last_row["Expected Sitewise Profit"] or 0
-        supplier_total_balance = total_last_row["Sitewise Supplier Balance"] or 0
-        contractor_total_balance = total_last_row["Sitewise Contractor Balance"] or 0
-        expected_office_expense = total_last_row["Expected Sitewise Office Expense"] or 0
+        total_expected_profit = total_last_row["Expected Profit"] or 0
+        supplier_total_balance = total_last_row["Supplier Balance"] or 0
+        contractor_total_balance = total_last_row["Contractor Balance"] or 0
+        expected_office_expense = total_last_row["Expected Office"] or 0
         
 
 
@@ -228,17 +255,28 @@ def view_data():
     else:
         columns_office = []
 
-    print(type(total_expected_profit))
-    print(type(supplier_total_balance))
-    print(type(contractor_total_balance))
-    print(type(expected_office_expense))
-    print(type(actual_office_expense))  
+    # Extract column names from the first row
+    if rows_supplier_promotion:
+        columns_supplier_promotion = rows_supplier_promotion[0].keys()
+        total_last_row_supplier_promotion = rows_supplier_promotion[-1]  # last row
+        actual_supplier_promotion_expense = total_last_row_supplier_promotion["Promotional Amount"] or 0
+    else:
+        columns_supplier_promotion = []
+
+    # print(type(total_expected_profit))
+    # print(type(supplier_total_balance))
+    # print(type(contractor_total_balance))
+    # print(type(expected_office_expense))
+    # print(type(actual_office_expense))  
 
     total_profit= (total_expected_profit
                    + supplier_total_balance
                    + contractor_total_balance
                    + (expected_office_expense
-                   - actual_office_expense))
+                   - actual_office_expense)
+                   + actual_supplier_promotion_expense)
+    
+    office_expense_balance = (expected_office_expense - actual_office_expense) or 0
 
     return render_template(
         "dashboard.html",
@@ -247,6 +285,9 @@ def view_data():
         rows=rows,
         columns_office=columns_office,
         rows_office=rows_office,
-        total_profit=total_profit
+        rows_supplier_promotion=rows_supplier_promotion,
+        columns_supplier_promotion=columns_supplier_promotion,
+        total_profit=total_profit,
+        office_expense_balance=office_expense_balance
 
 )

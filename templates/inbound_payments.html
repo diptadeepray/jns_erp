@@ -195,7 +195,7 @@ input:disabled {
 
         <div>
             <label>Source:</label>
-            <select name="source" id="source" onchange="updateCategoryDropdown()">
+            <select name="source" id="source" onchange="updateCategoryDropdown()" required>
                 <option value="">-- Select Source --</option>
                 
                 <option value="Client">Client</option>
@@ -207,7 +207,7 @@ input:disabled {
 
         <div>
             <label>Category:</label>
-            <select name="category" id="category" disabled>
+            <select name="category" id="category" disabled required>
                 <option value="">-- Select Category --</option>
             </select>
         </div>
