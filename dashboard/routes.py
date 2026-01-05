@@ -63,6 +63,7 @@ FROM
                SUM(total_amount) AS supplier_total
         FROM outbound_payments
         WHERE supplier_id IS NOT NULL
+        AND venture_id IS NOT NULL
         GROUP BY venture_id
     ) actual_supplier ON all_clients.venture_id = actual_supplier.venture_id
     LEFT JOIN (
@@ -77,6 +78,7 @@ FROM
                SUM(total_amount) AS contractor_total
         FROM outbound_payments
         WHERE contractor_id IS NOT NULL
+        AND venture_id IS NOT NULL
         GROUP BY venture_id
     ) actual_contractor ON all_clients.venture_id = actual_contractor.venture_id
     LEFT JOIN (
@@ -139,6 +141,7 @@ FROM
                SUM(total_amount) AS supplier_total
         FROM outbound_payments
         WHERE supplier_id IS NOT NULL
+        AND venture_id IS NOT NULL
         GROUP BY venture_id
     ) actual_supplier ON all_clients.venture_id = actual_supplier.venture_id
     LEFT JOIN (
@@ -153,6 +156,7 @@ FROM
                SUM(total_amount) AS contractor_total
         FROM outbound_payments
         WHERE contractor_id IS NOT NULL
+        AND venture_id IS NOT NULL
         GROUP BY venture_id
     ) actual_contractor ON all_clients.venture_id = actual_contractor.venture_id
     LEFT JOIN (
