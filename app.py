@@ -10,6 +10,48 @@ def create_app():
     # Database path
     app.config['DATABASE'] = os.path.join(app.root_path, 'database.db')
 
+
+
+
+    # ---------- INDIAN NUMBER FORMATTER ----------
+    def indian_format(value):
+        if value is None:
+            return ""
+
+        try:
+            value = float(value)
+        except:
+            return value
+
+        integer_part, _, decimal_part = f"{value:.2f}".partition(".")
+
+        if len(integer_part) <= 3:
+            formatted = integer_part
+        else:
+            last3 = integer_part[-3:]
+            rest = integer_part[:-3]
+            parts = []
+            while len(rest) > 2:
+                parts.insert(0, rest[-2:])
+                rest = rest[:-2]
+            if rest:
+                parts.insert(0, rest)
+            formatted = ",".join(parts) + "," + last3
+
+        return formatted if decimal_part == "00" else f"{formatted}.{decimal_part}"
+    
+
+    
+    # 🔥 REGISTER FILTER HERE
+    app.jinja_env.filters["indian"] = indian_format
+    # --------------------------------------------
+
+
+
+
+
+
+
     # Register Blueprints
     from onboarding.routes import onboarding_bp
     from inbound_payments.routes import inbound_payments_bp

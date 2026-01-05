@@ -65,7 +65,14 @@
         {% for row in rows %}
         <tr>
             {% for col in columns %}
-                <td>{{ row[col] }}</td>
+                <td>
+    {% if row[col] is number %}
+        {{ row[col] | indian }}
+    {% else %}
+        {{ row[col] }}
+    {% endif %}
+</td>
+
             {% endfor %}
         </tr>
         {% endfor %}
@@ -91,7 +98,14 @@
         {% for row in rows_office %}
         <tr>
             {% for col in columns_office %}
-                <td>{{ row[col] }}</td>
+                <td>
+    {% if row[col] is number %}
+        {{ row[col] | indian }}
+    {% else %}
+        {{ row[col] }}
+    {% endif %}
+</td>
+
             {% endfor %}
         </tr>
         {% endfor %}
@@ -104,8 +118,9 @@
 
 
 
-<p style="color: red; font-size: 22px;">
-    Office Expense Balance : {{ office_expense_balance }}
+
+<p style="color:red; font-size:22px;">
+    Office Expense Balance : {{ office_expense_balance | indian }}
 </p>
 
 
@@ -123,7 +138,14 @@
         {% for row in rows_supplier_promotion %}
         <tr>
             {% for col in columns_supplier_promotion %}
-                <td>{{ row[col] }}</td>
+                <td>
+    {% if row[col] is number %}
+        {{ row[col] | indian }}
+    {% else %}
+        {{ row[col] }}
+    {% endif %}
+</td>
+
             {% endfor %}
         </tr>
         {% endfor %}
@@ -138,7 +160,8 @@
 
 <br>
 
-<p>Total Profit : {{ total_profit }}</p>
+
+<p>Total Profit : {{ total_profit | indian }}</p>
 
 
 
