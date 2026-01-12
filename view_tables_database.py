@@ -91,7 +91,7 @@ def view_table_data(table_name):
         # Close the connection
         conn.close()
 
-view_table_data('inbound_payments')
+view_table_data('outbound_payments')
 
 
 
@@ -208,5 +208,3 @@ view_table_data('inbound_payments')
 
 #         # Close the connection
 # conn.close()
-
-

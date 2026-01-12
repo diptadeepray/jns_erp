@@ -323,7 +323,7 @@ def inbound_payments_home():
         
         else:
             print("No match found. Check everything carefully")
-            message = "The entered VentureID/SupplierID does not exist."
+            message = "The entered VentureID/SupplierID is not entered or does not exist."
 
 
 

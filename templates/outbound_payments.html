@@ -126,7 +126,29 @@ input:disabled {
                 labourDescription.disabled = true;
 
                 officeExpenseCategories.disabled = false;
-            } else {
+            } 
+            
+                // ⭐ NEW CASE
+    else if (destination === "Supplier_Reimbursement_GST") {
+        // Disable Client / Site / Venture
+        clientName.disabled = true;
+        siteName.disabled = true;
+        ventureId.disabled = true;
+
+        // Enable only Supplier fields
+        supplierName.disabled = false;
+        supplierId.disabled = false;
+
+        materialDescription.disabled = true;
+
+        contractorName.disabled = true;
+        contractorId.disabled = true;
+        labourDescription.disabled = true;
+
+        officeExpenseCategories.disabled = true;
+    }
+            
+            else {
                 clientName.disabled = true;
                 siteName.disabled = true;
                 ventureId.disabled = true;
@@ -175,6 +197,8 @@ input:disabled {
                     <option value="Supplier">Supplier</option>
                     <option value="Contractor">Contractor</option>
                     <option value="Office">Office</option>
+                    <option value="Supplier_Reimbursement_GST">Supplier Reimbursement-GST</option>
+
                 </select>
             </div>
 

@@ -191,12 +191,16 @@ QUERY2 = """
 
          ;
 """
-# ---- 3 PREDEFINED QUERY ----
+
+
+# ---- 3 PROMOTIONAL EXPENSE ----
+# ---- 3 NET ADDITION ----
 QUERY3 = """
   SELECT supplier_id "Supplier ID", 
          SUM(total_amount) "Promotional Amount"
          FROM inbound_payments
          WHERE supplier_id IS NOT NULL
+         AND category = 'Promotional_Expense'
          GROUP BY supplier_id
          
          UNION ALL
@@ -206,8 +210,54 @@ QUERY3 = """
          SUM(total_amount) AS total_amount_per_reason
          FROM inbound_payments
          WHERE supplier_id IS NOT NULL
+         AND category = 'Promotional_Expense'
          GROUP BY supplier_id)
 
+         ;
+"""
+
+# ---- 4 REIMBURSEMENT GST ----
+# ---- 4 ADDITION ----
+QUERY4 = """
+  SELECT supplier_id "Supplier ID", 
+         SUM(total_amount) "Reimbursement GST Amount Inbound"
+         FROM inbound_payments
+         WHERE supplier_id IS NOT NULL
+         AND category = 'Reimbursement_GST'
+         GROUP BY supplier_id
+         
+         UNION ALL
+
+   SELECT 'TOTAL', 
+         sum(total_amount_per_reason) FROM (SELECT supplier_id,
+         SUM(total_amount) AS total_amount_per_reason
+         FROM inbound_payments
+         WHERE supplier_id IS NOT NULL
+         AND category = 'Reimbursement_GST'
+         GROUP BY supplier_id)
+
+         ;
+"""
+
+# ---- 5 REIMBURSEMENT GST ----
+# ---- 5 SUBSTRACTION----
+QUERY5 = """
+  SELECT supplier_id "Supplier ID", 
+         SUM(total_amount) "Reimbursement GST Amount Outbound"
+         FROM outbound_payments
+         WHERE supplier_id IS NOT NULL
+         AND venture_id IS NULL
+         GROUP BY supplier_id
+         
+         UNION ALL
+
+   SELECT 'TOTAL', 
+         sum(total_amount_per_reason) FROM (SELECT supplier_id,
+         SUM(total_amount) AS total_amount_per_reason
+         FROM outbound_payments
+         WHERE supplier_id IS NOT NULL
+         AND venture_id IS NULL
+         GROUP BY supplier_id)
          ;
 """
 
@@ -236,6 +286,8 @@ def view_data():
     rows = run_query(QUERY1)
     rows_office = run_query(QUERY2)
     rows_supplier_promotion = run_query(QUERY3)
+    rows_supplier_reimbursement_gst_inbound = run_query(QUERY4)
+    rows_supplier_reimbursement_gst_outbound = run_query(QUERY5)
 
     # Extract column names from the first row
     if rows:
@@ -245,9 +297,6 @@ def view_data():
         supplier_total_balance = total_last_row["Supplier Balance"] or 0
         contractor_total_balance = total_last_row["Contractor Balance"] or 0
         expected_office_expense = total_last_row["Expected Office"] or 0
-        
-
-
     else:
         columns = []
 
@@ -267,6 +316,22 @@ def view_data():
     else:
         columns_supplier_promotion = []
 
+    if rows_supplier_reimbursement_gst_inbound:
+        columns_supplier_reimbursement_gst_inbound = rows_supplier_reimbursement_gst_inbound[0].keys()
+        total_last_row_supplier_reimbursement_gst_inbound = rows_supplier_reimbursement_gst_inbound[-1]  # last row
+        actual_supplier_reimbursement_gst_inbound = total_last_row_supplier_reimbursement_gst_inbound["Reimbursement GST Amount Inbound"] or 0
+    else:
+        columns_supplier_reimbursement_gst_inbound = []
+
+    if rows_supplier_reimbursement_gst_outbound:
+        columns_supplier_reimbursement_gst_outbound = rows_supplier_reimbursement_gst_outbound[0].keys()
+        total_last_row_supplier_reimbursement_gst_outbound = rows_supplier_reimbursement_gst_outbound[-1]  # last row
+        actual_supplier_reimbursement_gst_outbound = total_last_row_supplier_reimbursement_gst_outbound["Reimbursement GST Amount Outbound"] or 0
+    else:
+        columns_supplier_reimbursement_gst_outbound = []
+
+
+
     # print(type(total_expected_profit))
     # print(type(supplier_total_balance))
     # print(type(contractor_total_balance))
@@ -278,7 +343,10 @@ def view_data():
                    + contractor_total_balance
                    + (expected_office_expense
                    - actual_office_expense)
-                   + actual_supplier_promotion_expense)
+                   + actual_supplier_promotion_expense
+                   + actual_supplier_reimbursement_gst_inbound
+                   - actual_supplier_reimbursement_gst_outbound
+                   ) or 0
     
     office_expense_balance = (expected_office_expense - actual_office_expense) or 0
 
@@ -291,6 +359,10 @@ def view_data():
         rows_office=rows_office,
         rows_supplier_promotion=rows_supplier_promotion,
         columns_supplier_promotion=columns_supplier_promotion,
+        rows_supplier_reimbursement_gst_inbound=rows_supplier_reimbursement_gst_inbound,
+        columns_supplier_reimbursement_gst_inbound=columns_supplier_reimbursement_gst_inbound,
+        rows_supplier_reimbursement_gst_outbound=rows_supplier_reimbursement_gst_outbound,
+        columns_supplier_reimbursement_gst_outbound=columns_supplier_reimbursement_gst_outbound,    
         total_profit=total_profit,
         office_expense_balance=office_expense_balance
 

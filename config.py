@@ -8,7 +8,7 @@ CLIENT_MONEY_DISTRIBUTION_CATEGORYWISE = {
     "DCS": [.4,0,0,.6]
 }
 
-SUPPLIER_MONEY_DISTRIBUTION={"Promotional_Expense": [.35,.15,.38,.12]}
+SUPPLIER_MONEY_DISTRIBUTION={"Promotional_Expense": [.35,.15,.38,.12], "Reimbursement_GST": [.35,.15,.38,.12]}
 
 
 OFFICE_EXPENSE_CATEGORIES = [

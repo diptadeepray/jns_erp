@@ -157,6 +157,69 @@
 
 
 
+<div class="table-section">
+    {% if rows_supplier_reimbursement_gst_inbound %}
+    <table>
+        <tr>
+            {% for col in columns_supplier_reimbursement_gst_inbound %}
+                <th>{{ col }}</th>
+            {% endfor %}
+        </tr>
+
+        {% for row in rows_supplier_reimbursement_gst_inbound %}
+        <tr>
+            {% for col in columns_supplier_reimbursement_gst_inbound %}
+                <td>
+    {% if row[col] is number %}
+        {{ row[col] | indian }}
+    {% else %}
+        {{ row[col] }}
+    {% endif %}
+</td>
+
+            {% endfor %}
+        </tr>
+        {% endfor %}
+    </table>
+    {% else %}
+        <p>No data found.</p>
+    {% endif %}
+</div>
+
+
+
+<div class="table-section">
+    {% if rows_supplier_reimbursement_gst_outbound %}
+    <table>
+        <tr>
+            {% for col in columns_supplier_reimbursement_gst_outbound %}
+                <th>{{ col }}</th>
+            {% endfor %}
+        </tr>
+
+        {% for row in rows_supplier_reimbursement_gst_outbound %}
+        <tr>
+            {% for col in columns_supplier_reimbursement_gst_outbound %}
+                <td>
+    {% if row[col] is number %}
+        {{ row[col] | indian }}
+    {% else %}
+        {{ row[col] }}
+    {% endif %}
+</td>
+
+            {% endfor %}
+        </tr>
+        {% endfor %}
+    </table>
+    {% else %}
+        <p>No data found.</p>
+    {% endif %}
+</div>
+
+
+
+
 
 <br>
 

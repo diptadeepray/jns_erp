@@ -48,6 +48,7 @@ def outbound_payments_home():
         known_venture_id = request.form.get("venture_id")
 
         office_reason = request.form.get("office_reason")
+        given_supplier_id = request.form.get("supplier_id")
 
         print("The enterd row is ",check_client_name, check_site_name, known_venture_id, office_reason)
 
@@ -277,12 +278,100 @@ def outbound_payments_home():
             conn.commit()
             conn.close()
 
+        elif (not row) and given_supplier_id:
+            # Third if for Supplier-Reinbursement GST entry
+            # Insert Supplier-Reinbursement GST entry
+            # Extract posted fields — MUST match your SQLite table columns
 
+            message = "Previous Supplier Reimbursement GST entry was successfully added."
+            print("Entered in Supplier Reimbursement GST block")
+
+            # Extract posted fields — MUST match your SQLite table columns
+            fields = [
+                    "destination",
+                    "client_name",
+                    "site_name",
+                    "venture_id",
+                    "supplier_name",
+                    "supplier_id",
+                    "material_description",
+                    "contractor_name",
+                    "contractor_id",
+                    "labour_description",
+                    "office_reason",
+                    "cash_amount",
+                    "cheque_amount",
+                    "total_amount",
+                    "amount_number",
+                    "cash_name",
+                    "cheque_name",
+                    "cheque_date",
+                    "cheque_bank",
+                    "cheque_number",
+                    "entry_date",
+                    "actual_ap_id"
+                ]
+
+                # Read values from HTML form
+            data = [request.form.get(f) for f in fields]
+
+
+
+
+
+
+            print(data)
+
+            # Get the index
+            cash_index = fields.index("cash_amount")
+            cheque_index = fields.index("cheque_amount")
+            total_index = fields.index("total_amount")
+
+            cash_value = float(data[cash_index].replace(",", "")) if data[cash_index] else 0
+            cheque_value = float(data[cheque_index].replace(",", "")) if data[cheque_index] else 0
+
+            # Put the cleaned values back into the list
+            data[cash_index] = cash_value
+            data[cheque_index] = cheque_value
+
+            # Compute total_amount and put it into the list
+            data[total_index] = cash_value + cheque_value
+
+            print(data)
+            print("Data prepared")
+
+
+
+
+
+
+
+
+
+# There is only one table of outbound_payments, here we store sitewise payments and office_expenses
+
+                # Insert query MUST match the column order above
+            c.execute("""
+                    INSERT INTO outbound_payments (
+                        destination, client_name, site_name, venture_id,
+                        supplier_name, supplier_id, material_description,
+                        contractor_name, contractor_id, labour_description,
+                        office_reason, cash_amount, cheque_amount, total_amount,
+                        amount_number, cash_name, cheque_name, cheque_date,
+                        cheque_bank, cheque_number, entry_date, actual_ap_id
+                    )
+                    VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
+                """, data)
+            print("Data put in table")
+
+            conn.commit()
+            conn.close()
+    
 
         else:
         # First if failed
             print("No match found for client. Entered VentureID does not exist.")
-            message = "The entered VentureID does not exist. Or Office reason is not provided for office expense entry."
+            message = "The entered VentureID does not exist or nor entered. Or Office reason is not provided for office expense entry."
 
 
 
@@ -293,4 +382,3 @@ def outbound_payments_home():
 
 
     return render_template('outbound_payments.html', office_expense_categories=OFFICE_EXPENSE_CATEGORIES, client_data=client_data, supplier_data=supplier_data, contractor_data=contractor_data, message=message)
-

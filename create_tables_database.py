@@ -228,5 +228,5 @@ def creating_supplier_inbound_table():
         
         conn.commit()
         conn.close()
-
-creating_supplier_inbound_table()
+# Not created
+#creating_supplier_inbound_table()
