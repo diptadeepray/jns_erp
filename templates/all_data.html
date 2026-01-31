@@ -1,0 +1,228 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Dashboard</title>
+    <style>
+        body {
+            /*font-family: Arial, sans-serif;*/
+            background: #f4f6f9;
+            margin: 0;
+            padding: 0;
+            text-align: center;
+        }
+
+        /* Home button at top-left */
+        .home-button {
+            position: absolute;
+            top: 20px;
+            left: 20px;
+            padding: 8px 15px;
+            width: auto;
+        }
+
+        /* Heading styling with spacing below button */
+        h1 {
+            margin-top: 100px;   /* space below Home button */
+            margin-bottom: 30px; /* space below heading before table */
+        }
+
+        /* Table styling */
+     table {
+    border-collapse: collapse;
+    width: 90%;
+    margin: 30px auto; /* 30px top & bottom, auto left & right */
+    table-layout: auto;
+}
+
+
+        th, td {
+            border: 1px solid #777;
+            padding: 1px;
+            text-align: center;
+            white-space: nowrap; /* prevent text from wrapping */
+        }
+
+        th {
+            background: #eaeaea;
+        }
+    </style>
+</head>
+<body>
+
+    <button class="home-button" type="button" onclick="window.location.href='/'">Home</button>
+
+    <h1>{{ header }}</h1>
+
+    <div class="table-section">
+    {% if rows_clients %}
+    <table>
+        <tr>
+            {% for col in columns_clients %}
+                <th>{{ col }}</th>
+            {% endfor %}
+        </tr>
+
+        {% for row in rows_clients %}
+        <tr>
+            {% for col in columns_clients %}
+                <td>
+    {% if row[col] is number %}
+        {{ row[col] | indian }}
+    {% else %}
+        {{ row[col] }}
+    {% endif %}
+</td>
+
+            {% endfor %}
+        </tr>
+        {% endfor %}
+    </table>
+    {% else %}
+        <p></p>
+    {% endif %}
+</div>
+
+<br>
+
+
+
+   <div class="table-section">
+    {% if rows_suppliers %}
+    <table>
+        <tr>
+            {% for col in columns_suppliers %}
+                <th>{{ col }}</th>
+            {% endfor %}
+        </tr>
+
+        {% for row in rows_suppliers %}
+        <tr>
+            {% for col in columns_suppliers %}
+                <td>
+    {% if row[col] is number %}
+        {{ row[col] | indian }}
+    {% else %}
+        {{ row[col] }}
+    {% endif %}
+</td>
+
+            {% endfor %}
+        </tr>
+        {% endfor %}
+    </table>
+    {% else %}
+        <p></p>
+    {% endif %}
+</div>
+
+
+
+
+
+
+
+
+<div class="table-section">
+    {% if rows_contractors %}
+    <table>
+        <tr>
+            {% for col in columns_contractors   %}
+                <th>{{ col }}</th>
+            {% endfor %}
+        </tr>
+
+        {% for row in rows_contractors %}
+        <tr>
+            {% for col in columns_contractors %}
+                <td>
+    {% if row[col] is number %}
+        {{ row[col] | indian }}
+    {% else %}
+        {{ row[col] }}
+    {% endif %}
+</td>
+
+            {% endfor %}
+        </tr>
+        {% endfor %}
+    </table>
+    {% else %}
+        <p></p>
+    {% endif %}
+</div>
+
+
+
+<div class="table-section">
+    {% if rows_inbound_payments %}
+    <table>
+        <tr>
+            {% for col in columns_inbound_payments %}
+                <th>{{ col }}</th>
+            {% endfor %}
+        </tr>
+
+        {% for row in rows_inbound_payments %}
+        <tr>
+            {% for col in columns_inbound_payments %}
+                <td>
+    {% if row[col] is number %}
+        {{ row[col] | indian }}
+    {% else %}
+        {{ row[col] }}
+    {% endif %}
+</td>
+
+            {% endfor %}
+        </tr>
+        {% endfor %}
+    </table>
+    {% else %}
+        <p></p>
+    {% endif %}
+</div>
+
+
+
+<div class="table-section">
+    {% if rows_outbound_payments %}
+    <table>
+        <tr>
+            {% for col in columns_outbound_payments %}
+                <th>{{ col }}</th>
+            {% endfor %}
+        </tr>
+
+        {% for row in rows_outbound_payments %}
+        <tr>
+            {% for col in columns_outbound_payments %}
+                <td>
+    {% if row[col] is number %}
+        {{ row[col] | indian }}
+    {% else %}
+        {{ row[col] }}
+    {% endif %}
+</td>
+
+            {% endfor %}
+        </tr>
+        {% endfor %}
+    </table>
+    {% else %}
+        <p></p>
+    {% endif %}
+</div>
+
+
+
+
+
+<br>
+
+
+
+
+
+
+</body>
+</html>

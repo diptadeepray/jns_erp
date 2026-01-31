@@ -192,7 +192,7 @@ input:disabled {
         <div class="form-grid">
             <div>
                 <label>Destination:</label>
-                <select name="destination" id="destination" onchange="updateCategoryDropdown()">
+                <select name="destination" id="destination" onchange="updateCategoryDropdown()" required>
                     <option value="">-- Select Destination --</option>
                     <option value="Supplier">Supplier</option>
                     <option value="Contractor">Contractor</option>
@@ -294,12 +294,12 @@ input:disabled {
 
             <div>
                 <label>Cash Amount:</label>
-                <input type="text" name="cash_amount">
+                <input type="text" name="cash_amount" required>
             </div>
 
             <div>
                 <label>Cheque Amount:</label>
-                <input type="text" name="cheque_amount">
+                <input type="text" name="cheque_amount" required>
             </div>
 
             <div>

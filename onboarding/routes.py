@@ -124,4 +124,4 @@ def onboarding_home():
     
 
 
-    return render_template('onboarding.html',client_data=client_data, client_categories=client_categories,supplier_data=supplier_data, contractor_data=contractor_data, contractor_work_categories=CONTRACTOR_WORK_CATEGORIES)
+    return render_template('onboarding.html', client_categories=client_categories, contractor_work_categories=CONTRACTOR_WORK_CATEGORIES)

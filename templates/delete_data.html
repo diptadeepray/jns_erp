@@ -1,0 +1,247 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width,initial-scale=1" />
+    <title>Delete Data</title>
+
+    <!-- Google Font -->
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600;700&display=swap" rel="stylesheet">
+
+    <style>
+        :root{
+            --bg-1: #eef2f7; /* page background */
+            --card-bg: #ffffff;
+            --muted: #6b7280;
+            --accent-1: #4f46e5; /* indigo */
+            --accent-2: #06b6d4; /* teal */
+            --danger: #ef4444;
+            --radius: 14px;
+            --glass: rgba(255,255,255,0.6);
+            --shadow: 0 8px 30px rgba(16,24,40,0.08);
+            --focus: 0 0 0 4px rgba(79,70,229,0.12);
+            --max-width: 520px;
+        }
+
+        /* Reset & base */
+        *{box-sizing:border-box}
+        html,body{height:100%}
+        body{
+            margin:0;
+            font-family: "Inter", system-ui, -apple-system, "Segoe UI", Roboto, "Helvetica Neue", Arial;
+            -webkit-font-smoothing:antialiased;
+            -moz-osx-font-smoothing:grayscale;
+            background: linear-gradient(180deg, #f7fafc 0%, var(--bg-1) 100%);
+            color: #0f172a;
+            display:flex;
+            align-items:center;
+            justify-content:center;
+            padding:32px;
+        }
+
+        /* Page container centers content and adds subtle backdrop */
+        .page-wrap{
+            width:100%;
+            max-width:calc(var(--max-width) + 48px);
+            display:flex;
+            align-items:center;
+            justify-content:center;
+        }
+
+        /* Card */
+        .card{
+            width:100%;
+            max-width:var(--max-width);
+            background: linear-gradient(180deg, rgba(255,255,255,0.9), var(--card-bg));
+            border-radius:var(--radius);
+            padding:28px;
+            box-shadow:var(--shadow);
+            border: 1px solid rgba(15,23,42,0.04);
+            backdrop-filter: blur(6px);
+        }
+
+        /* Top row: home button + header */
+        .top-row{
+            display:flex;
+            align-items:center;
+            justify-content:space-between;
+            gap:12px;
+            margin-bottom:10px;
+        }
+
+        .home-button{
+            background:transparent;
+            border:1px solid rgba(15,23,42,0.06);
+            padding:8px 12px;
+            border-radius:10px;
+            cursor:pointer;
+            font-weight:600;
+            color:var(--accent-1);
+            transition:all .18s ease;
+        }
+        .home-button:hover{ transform:translateY(-2px); box-shadow:0 6px 18px rgba(79,70,229,0.06)}
+
+        h1{
+            margin:0;
+            font-size:1.1rem;
+            font-weight:700;
+            color:#0b1220;
+            text-align:center;
+            flex:1;
+        }
+
+        p.lead{
+            margin:10px 0 20px;
+            color:var(--muted);
+            font-size:0.95rem;
+            text-align:center;
+        }
+
+        form{
+            display:flex;
+            flex-direction:column;
+            gap:14px;
+        }
+
+        label{
+            display:block;
+            font-size:0.78rem;
+            font-weight:600;
+            color:#0b1220;
+            margin-bottom:6px;
+            letter-spacing:0.2px;
+        }
+
+        /* Inputs & selects */
+        select, textarea, input[type="text"]{
+            width:100%;
+            padding:12px 14px;
+            border-radius:10px;
+            border:1px solid rgba(15,23,42,0.06);
+            outline:none;
+            font-size:0.95rem;
+            transition:box-shadow .16s ease, transform .12s ease, border-color .12s ease;
+            background:linear-gradient(180deg, rgba(243,244,246,0.8), rgba(255,255,255,0.6));
+        }
+
+        select{appearance:none; -webkit-appearance:none; background-image:linear-gradient(45deg,transparent 50%, rgba(15,23,42,0.35) 50%), linear-gradient(135deg, rgba(15,23,42,0.35) 50%, transparent 50%); background-position: calc(100% - 14px) calc(1em + 2px), calc(100% - 9px) calc(1em + 2px); background-size: 6px 6px, 6px 6px; background-repeat:no-repeat; padding-right:40px;}
+
+        textarea{min-height:64px; resize:vertical}
+
+        select:focus, textarea:focus, input[type="text"]:focus{
+            box-shadow:var(--focus);
+            border-color:var(--accent-1);
+            transform:translateY(-1px);
+        }
+
+        /* Buttons */
+        .btn{
+            display:inline-flex;
+            align-items:center;
+            justify-content:center;
+            gap:8px;
+            padding:12px 16px;
+            border-radius:12px;
+            border:none;
+            cursor:pointer;
+            font-weight:700;
+            font-size:0.95rem;
+            transition:transform .12s ease, box-shadow .12s ease;
+        }
+
+        .btn-primary{
+            background:linear-gradient(90deg,var(--accent-1),var(--accent-2));
+            color:white;
+            box-shadow:0 8px 20px rgba(79,70,229,0.12);
+        }
+        .btn-primary:hover{ transform:translateY(-3px); box-shadow:0 18px 36px rgba(79,70,229,0.12)}
+
+        .btn-danger{
+            background:var(--danger);
+            color:white;
+        }
+
+        /* message/result */
+        .message, .result{
+            margin-top:12px;
+            padding:12px 14px;
+            border-radius:10px;
+            background:linear-gradient(180deg, rgba(99,102,241,0.08), rgba(99,102,241,0.03));
+            border:1px solid rgba(99,102,241,0.06);
+            color:#111827;
+            font-size:0.95rem;
+        }
+
+        /* small helper text */
+        .hint{font-size:0.82rem;color:var(--muted)}
+
+        /* Responsive tweaks */
+        @media (max-width:480px){
+            .card{padding:18px}
+            h1{font-size:1rem}
+            :root{--max-width:420px}
+        }
+    </style>
+</head>
+<body>
+
+<div class="page-wrap">
+    <div class="card">
+        <div class="top-row">
+            <button class="home-button" type="button" onclick="window.location.href='/'">Home</button>
+            <h1>{{ header }}</h1>
+        </div>
+
+        <p class="lead">Select the table and parameter for the row you want to delete.<br>A backup will be created before deletion.</p>
+
+        <form action="/delete_data" method="POST" autocomplete="off">
+
+            <div>
+                <label for="table">Table Name</label>
+                <select id="table" name="table" required>
+                    <option value="" disabled selected>-- Select Table --</option>
+                    {% for table in all_table_names %}
+                        <option value="{{ table }}">{{ table }}</option>
+                    {% endfor %}
+                </select>
+            </div>
+
+            <div>
+                <label for="parameter">Parameter Name</label>
+                <select id="parameter" name="parameter" required>
+                    <option value="" disabled selected>-- Select Parameter --</option>
+                    {% for pid in all_ids %}
+                        <option value="{{ pid }}">{{ pid }}</option>
+                    {% endfor %}
+                </select>
+            </div>
+
+            <div>
+                <label for="value">Value</label>
+                <textarea id="value" name="value" rows="2" placeholder="Enter the parameter value to match" required></textarea>
+            </div>
+
+            <div style="display:flex;gap:12px;justify-content:center;margin-top:6px;">
+                <button class="btn btn-primary" type="submit">Delete</button>
+                <button class="btn" type="reset">Reset</button>
+            </div>
+
+        </form>
+
+        {% if message %}
+            <div class="message">
+                <p>{{ message }}</p>
+            </div>
+        {% endif %}
+
+        {% if result %}
+            <div class="result">
+                <p>{{ result }}</p>
+            </div>
+        {% endif %}
+
+    </div>
+</div>
+
+</body>
+</html>

@@ -169,6 +169,11 @@ def inbound_payments_home():
                 cheque_number, entry_date, ar_id)
                 VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
             """, data)
+                
+                conn.commit()
+
+                last_id = c.lastrowid
+
 
 
 
@@ -212,7 +217,8 @@ def inbound_payments_home():
                 float(data[total_index])*breakup[0],   # expected_office_expense (default)
                 float(data[total_index])*breakup[1],   # expected_material_expense (default)
                 float(data[total_index])*breakup[2],   # expected_labour_expense (default)
-                float(data[total_index])*breakup[3]   # expected_profit (default)
+                float(data[total_index])*breakup[3],   # expected_profit (default)
+                last_id
                         ]
 
                 c.execute("""
@@ -220,8 +226,8 @@ def inbound_payments_home():
                 (source, category, client_name, site_name, venture_id,
                 supplier_name, supplier_id, total_amount,
                 expected_office_expense, expected_material_expense,
-                expected_labour_expense, expected_profit)
-                VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
+                expected_labour_expense, expected_profit, inbound_payments_column_id)
+                VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
             """, expected_ap_data)
                 
 

@@ -1,4 +1,3 @@
-<!DOCTYPE html>
 <html>
 <head>
     <title>Inbound Payments</title>
@@ -185,6 +184,7 @@ input:disabled {
  <button class="home-button" type="button" onclick="window.location.href='/'">Home</button>
 
 <form action="/inbound_payments" method="POST">
+<!--action="/inbound_payments" doesnot matter because we are comming back to same page, not different oage-->
 
     <h2>Enter Inbound Payment Details</h2>
 
@@ -264,12 +264,12 @@ input:disabled {
 
         <div>
             <label>Cash Amount:</label>
-            <input type="text" name="cash_amount">
+            <input type="text" name="cash_amount" required>
         </div>
 
         <div>
             <label>Cheque Amount:</label>
-            <input type="text" name="cheque_amount">
+            <input type="text" name="cheque_amount"required>
         </div>
 
         <div>

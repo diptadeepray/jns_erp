@@ -1,21 +1,149 @@
 <!DOCTYPE html>
-
-<html>
+<html lang="en">
 
 <head>
-    <link rel="stylesheet" href="/static/style.css">
+    <meta charset="UTF-8">
     <title>JNS ERP</title>
+
+    <!-- Google Font -->
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600&display=swap" rel="stylesheet">
+
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Poppins', sans-serif;
+        }
+
+        body.home {
+            min-height: 100vh;
+            background: linear-gradient(135deg, #1d2671, #c33764);
+            display: flex;
+            justify-content: center;
+            align-items: center;
+        }
+
+        .container {
+            background: #ffffff;
+            padding: 40px 50px;
+            border-radius: 16px;
+            width: 100%;
+            max-width: 900px;
+            box-shadow: 0 25px 60px rgba(0, 0, 0, 0.25);
+            text-align: center;
+        }
+
+        h1 {
+            font-size: 32px;
+            font-weight: 600;
+            color: #333;
+            margin-bottom: 35px;
+        }
+
+   
+
+        .btn {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 18px 20px;
+            text-decoration: none;
+            font-size: 15px;
+            font-weight: 500;
+            color: #fff;
+            border-radius: 12px;
+            transition: all 0.3s ease;
+            letter-spacing: 0.4px;
+        }
+
+        .btn:hover {
+            transform: translateY(-4px);
+            box-shadow: 0 10px 25px rgba(0, 0, 0, 0.2);
+            opacity: 0.95;
+        }
+
+            .yellow {
+        background: linear-gradient(135deg, #f7971e, #ffd200);
+        color: #333;
+    }
+
+    .green {
+        background: linear-gradient(135deg, #11998e, #38ef7d);
+    }
+
+   .blue {
+            background: linear-gradient(135deg,  #1e90ff, #0047b3);
+        }
+
+    .red {
+        background: linear-gradient(135deg, #7f0000, #b71c1c, #ff5252);
+    }
+
+    .neutral {
+        background: linear-gradient(135deg, #232526, #414345);
+    }
+        @media (max-width: 600px) {
+            h1 {
+                font-size: 26px;
+            }
+
+            .container {
+                padding: 30px 25px;
+            
+            }
+        }
+
+        /* not used */
+             .buttons {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
+            gap: 20px;
+        }
+.button-row {
+    display: flex;
+    justify-content: center;
+    flex-wrap: wrap;
+    gap: 20px;
+    margin-bottom: 20px; /* space between rows */
+}
+
+
+/*By default, flex items (your .btn) only take as much width as their content + padding. That’s why 1 button didn’t stretch across the row, 2 buttons were uneven*/
+/* So the following code is written*/
+.btn {
+    flex: 1; /* turns buttons into equal flexible boxes.*/
+
+}
+
+
+    </style>
 </head>
 
 <body class="home">
-    <h1>Welcome to JNS Interiers!</h1>
 
-    <div class="buttons">
+<div class="container">
+    <h1>Welcome to JNS Interiors ERP</h1>
+
+    <!-- First row -->
+    <div class="button-row">
         <a href="/onboarding" class="btn yellow">ONBOARDING</a>
         <a href="/inbound_payments" class="btn green">INBOUND PAYMENTS ENTRY</a>
         <a href="/outbound_payments" class="btn blue">OUTBOUND PAYMENTS ENTRY</a>
-        <a href="/dashboard" class="btn red">DASHBOARD</a>
     </div>
+
+    <!-- Second row -->
+    <div class="button-row">
+        <a href="/dashboard" class="btn red">DASHBOARD</a>
+        <a href="/all_data" class="btn red">ALL DATA</a>
+    </div>
+
+            <!-- Third row -->
+    <div class="button-row">
+        <a href="/delete_data" class="btn neutral">DELETE DATA</a>
+    </div>
+</div>
+
 
 </body>
 

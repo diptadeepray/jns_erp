@@ -4,13 +4,10 @@ import sqlite3
 dashboard_bp = Blueprint('dashboard', __name__)
 
 
-# total_expected_profit=0
-# supplier_total_balance=0
-# contractor_total_balance=0
-# expected_office_expense=0
-# actual_office_expense=0
+
 
 # ---- 1 PREDEFINED QUERY ----
+# Expected AP Promblem
 
 QUERY1 ="""SELECT 
     client_name "Client Name",
@@ -49,7 +46,16 @@ FROM
         expected_profit.expected_site_profit AS expected_sitewise_profit,
         expected_profit.expected_site_office_expense AS expected_sitewise_office_expense
 
+        
+
+
+
+
     FROM (SELECT venture_id, client_name, contract_amount FROM all_clients) all_clients
+
+
+
+
     LEFT JOIN (
         SELECT venture_id,
                SUM(total_amount) AS total_amount,
@@ -91,7 +97,41 @@ FROM
     ) expected_profit ON all_clients.venture_id = expected_profit.venture_id
 )
 
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 UNION ALL
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 -- ================= TOTAL ROW =================
 SELECT
@@ -127,7 +167,17 @@ FROM
             - COALESCE(actual_contractor.contractor_total,0) AS contractor_difference,
         expected_profit.expected_site_profit AS expected_sitewise_profit,
         expected_profit.expected_site_office_expense AS expected_sitewise_office_expense
-    FROM (SELECT venture_id, contract_amount FROM all_clients) all_clients
+
+
+
+
+
+    FROM (SELECT venture_id, client_name, contract_amount FROM all_clients) all_clients
+
+
+
+
+    
     LEFT JOIN (
         SELECT venture_id,
                SUM(total_amount) AS total_amount,
@@ -172,7 +222,8 @@ FROM
 """
 
 
-# ---- 2 PREDEFINED QUERY ----
+# ---- 2 OFFICE EXPENSE QUERY ----
+# Not affected by outbound deletion
 QUERY2 = """
   SELECT office_reason "Reason of Office Expense", 
          SUM(total_amount) "Expense Amount"
@@ -195,6 +246,7 @@ QUERY2 = """
 
 # ---- 3 PROMOTIONAL EXPENSE ----
 # ---- 3 NET ADDITION ----
+# Not affected by inbound deletion
 QUERY3 = """
   SELECT supplier_id "Supplier ID", 
          SUM(total_amount) "Promotional Amount"
@@ -218,6 +270,7 @@ QUERY3 = """
 
 # ---- 4 REIMBURSEMENT GST ----
 # ---- 4 ADDITION ----
+# Not affected by inbound deletion
 QUERY4 = """
   SELECT supplier_id "Supplier ID", 
          SUM(total_amount) "Reimbursement GST Amount Inbound"
@@ -241,6 +294,7 @@ QUERY4 = """
 
 # ---- 5 REIMBURSEMENT GST ----
 # ---- 5 SUBSTRACTION----
+# Not affected by outbound deletion
 QUERY5 = """
   SELECT supplier_id "Supplier ID", 
          SUM(total_amount) "Reimbursement GST Amount Outbound"

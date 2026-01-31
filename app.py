@@ -57,11 +57,15 @@ def create_app():
     from inbound_payments.routes import inbound_payments_bp
     from outbound_payments.routes import outbound_payments_bp
     from dashboard.routes import dashboard_bp
+    from all_data.routes import all_data_bp
+    from delete_data.routes import delete_data_bp
 
     app.register_blueprint(onboarding_bp, url_prefix='/onboarding')
     app.register_blueprint(inbound_payments_bp, url_prefix='/inbound_payments')
     app.register_blueprint(outbound_payments_bp, url_prefix='/outbound_payments')
     app.register_blueprint(dashboard_bp, url_prefix='/dashboard')
+    app.register_blueprint(all_data_bp, url_prefix='/all_data')
+    app.register_blueprint(delete_data_bp, url_prefix='/delete_data')
 
     # Home route
     @app.route('/')
@@ -77,7 +81,7 @@ if __name__ == "__main__":
     app = create_app()
     #app.run()
     #app.run(debug=True)
-    app.run(host="0.0.0.0", port=5001, debug=True)
+    app.run(host="0.0.0.0", port=5005, debug=True)
 
 
 
