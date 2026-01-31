@@ -1,0 +1,20 @@
+1️⃣ Create a virtual environment (in the new location)
+- python -m venv venv
+
+Activate it:
+* macOS / Linux
+- source venv/bin/activate
+Windows
+* venv\Scripts\activate
+- You should see (venv) in your terminal.
+
+2️⃣ Install dependencies from requirements.txt
+This installs exact versions of Flask and all other libraries used in your app.
+- pip install -r requirements.txt
+
+3️⃣ Flask web app entry file is app.py, run it using python:
+- python3 app.py
+
+4️⃣ Run the app in browser
+The links will the visible in the terminal after running the command
+Copy it and paste in any browser
